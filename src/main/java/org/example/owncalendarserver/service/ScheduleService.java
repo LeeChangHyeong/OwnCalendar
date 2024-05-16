@@ -29,4 +29,19 @@ public class ScheduleService {
 
         return scheduleResponseDto;
     }
+
+    public ScheduleResponseDto getSelectSchedule(Long id) {
+        // 해당 스케쥴이 DB에 존재하는지 확인
+        return scheduleRepository.findById(id)
+                .map(ScheduleResponseDto::new)
+                .orElseThrow(() ->
+                        new IllegalArgumentException("선택한 일정은 존재하지 않습니다.")
+                );
+    }
+
+    private Schedule findSchedule(Long id) {
+        return scheduleRepository.findById(id).orElseThrow(() ->
+                new IllegalArgumentException("선택한 메모는 존재하지 않습니다.")
+        );
+    }
 }
