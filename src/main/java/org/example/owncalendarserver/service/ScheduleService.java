@@ -1,5 +1,6 @@
 package org.example.owncalendarserver.service;
 
+import jakarta.transaction.Transactional;
 import org.example.owncalendarserver.dto.ScheduleRequestDto;
 import org.example.owncalendarserver.dto.ScheduleResponseDto;
 import org.example.owncalendarserver.entity.Schedule;
@@ -49,19 +50,41 @@ public class ScheduleService {
     }
 
     // 특정 스케쥴 수정
-    public Long editSchedule(Long id, ScheduleRequestDto requestDto, String password) {
+    @Transactional
+    public ScheduleResponseDto editSchedule(Long id, ScheduleRequestDto requestDto, String password) {
         // 해당 메모가 DB에 존재하는지 확인
         // 옵셔널 해제
         Schedule schedule = findSchedule(id);
 
-        if(!schedule.getPassword().equals(password)){
-            throw new IllegalStateException("비밀번호가 틀립니다.");
-        }
+        // 비밀번호 확인
+        checkPassword(schedule, password);
 
         // 메모 내용 수정
         schedule.update(requestDto);
 
+        ScheduleResponseDto scheduleResponseDto = new ScheduleResponseDto(schedule);
+
+        return scheduleResponseDto;
+    }
+
+    public Long deleteSchedule(Long id, String password) {
+        // 해당 스케쥴이 DB에 존재하는지 확인
+        Schedule schedule = findSchedule(id);
+
+        // 비밀번호 확인
+        checkPassword(schedule, password);
+
+        // 스케쥴 삭제
+        scheduleRepository.delete(schedule);
+
         return id;
+    }
+
+    // 비밀번호 확인
+    public void checkPassword(Schedule schedule, String password) {
+        if(!schedule.getPassword().equals(password)){
+            throw new IllegalStateException("비밀번호가 틀립니다.");
+        }
     }
 
     private Schedule findSchedule(Long id) {
