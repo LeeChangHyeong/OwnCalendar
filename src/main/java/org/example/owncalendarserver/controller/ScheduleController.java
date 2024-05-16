@@ -5,6 +5,8 @@ import org.example.owncalendarserver.dto.ScheduleResponseDto;
 import org.example.owncalendarserver.service.ScheduleService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api")
 public class ScheduleController {
@@ -25,5 +27,17 @@ public class ScheduleController {
     @GetMapping("/schedule/id")
     public ScheduleResponseDto getSelectSchedule(Long id) {
         return scheduleService.getSelectSchedule(id);
+    }
+
+    // 모든 스케쥴 조회
+    @GetMapping("/schedule")
+    public List<ScheduleResponseDto> getSchedule() {
+        return scheduleService.getSchedule();
+    }
+
+    // 특정 스케쥴 수정
+    @PutMapping("/memos/{id}")
+    public Long editMemo(@PathVariable Long id, @RequestBody ScheduleRequestDto requestDto) {
+        return scheduleService.editSchedule(id, requestDto, requestDto.getPassword());
     }
 }
