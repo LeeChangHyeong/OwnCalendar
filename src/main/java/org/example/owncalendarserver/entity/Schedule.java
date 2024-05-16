@@ -36,4 +36,10 @@ public class Schedule {
         this.password = requestDto.getPassword();
         this.createDate = new Date();
     }
+
+    public void update(ScheduleRequestDto scheduleRequestDto) {
+        this.title = scheduleRequestDto.getTitle();
+        this.content = scheduleRequestDto.getContent();
+        this.name = scheduleRequestDto.getName();
+    }
 }
