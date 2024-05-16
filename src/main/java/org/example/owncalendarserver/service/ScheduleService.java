@@ -6,6 +6,8 @@ import org.example.owncalendarserver.entity.Schedule;
 import org.example.owncalendarserver.repository.ScheduleRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ScheduleService {
 
@@ -17,6 +19,7 @@ public class ScheduleService {
     }
 
 
+    // 스케쥴 생성
     public ScheduleResponseDto createSchedule(ScheduleRequestDto requestDto) {
         // RequestDto -> Entity
         Schedule schedule = new Schedule(requestDto);
@@ -30,6 +33,7 @@ public class ScheduleService {
         return scheduleResponseDto;
     }
 
+    // 특정 스케쥴 조회
     public ScheduleResponseDto getSelectSchedule(Long id) {
         // 해당 스케쥴이 DB에 존재하는지 확인
         return scheduleRepository.findById(id)
@@ -37,6 +41,27 @@ public class ScheduleService {
                 .orElseThrow(() ->
                         new IllegalArgumentException("선택한 일정은 존재하지 않습니다.")
                 );
+    }
+
+    // 전체 스케쥴 조회
+    public List<ScheduleResponseDto> getSchedule() {
+        return scheduleRepository.findAllByOrderByCreateDateDesc().stream().map(ScheduleResponseDto::new).toList();
+    }
+
+    // 특정 스케쥴 수정
+    public Long editSchedule(Long id, ScheduleRequestDto requestDto, String password) {
+        // 해당 메모가 DB에 존재하는지 확인
+        // 옵셔널 해제
+        Schedule schedule = findSchedule(id);
+
+        if(!schedule.getPassword().equals(password)){
+            throw new IllegalStateException("비밀번호가 틀립니다.");
+        }
+
+        // 메모 내용 수정
+        schedule.update(requestDto);
+
+        return id;
     }
 
     private Schedule findSchedule(Long id) {
