@@ -36,8 +36,13 @@ public class ScheduleController {
     }
 
     // 특정 스케쥴 수정
-    @PutMapping("/memos/{id}")
-    public Long editMemo(@PathVariable Long id, @RequestBody ScheduleRequestDto requestDto) {
+    @PutMapping("/schedule/{id}")
+    public ScheduleResponseDto editSchedule(@PathVariable Long id, @RequestBody ScheduleRequestDto requestDto) {
         return scheduleService.editSchedule(id, requestDto, requestDto.getPassword());
+    }
+
+    @DeleteMapping("/schedule/{id}")
+    public Long deleteSchedule(@PathVariable Long id, @RequestBody ScheduleRequestDto requestDto) {
+        return scheduleService.deleteSchedule(id, requestDto.getPassword());
     }
 }
