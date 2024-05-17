@@ -21,7 +21,7 @@
 ![image](https://github.com/LeeChangHyeong/OwnCalendar/assets/71262367/b8067d8b-c687-457e-8042-33c3165f9178)
 
 ## API 명세서
-![image](https://github.com/LeeChangHyeong/OwnCalendar/assets/71262367/f80e2f08-f5bb-4915-9777-e941b24d263f)
+![image](https://github.com/LeeChangHyeong/OwnCalendar/assets/71262367/228dac81-9f70-4823-a761-7dd6bf31956d)
 
 ## ERD 다이어그램
 ![image](https://github.com/LeeChangHyeong/OwnCalendar/assets/71262367/936bd2e2-215e-4aa3-b6bb-c99a18c101b2)
