@@ -1,6 +1,7 @@
 package org.example.owncalendarserver.service;
 
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.example.owncalendarserver.dto.ScheduleRequestDto;
 import org.example.owncalendarserver.dto.ScheduleResponseDto;
 import org.example.owncalendarserver.entity.Schedule;
@@ -10,15 +11,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor // final 키워드를 가진 모든 것에 대한 생성자를 만들어준다.
 public class ScheduleService {
-
     private final ScheduleRepository scheduleRepository;
-
-    // 생성자로 주입
-    public ScheduleService(ScheduleRepository scheduleRepository) {
-        this.scheduleRepository = scheduleRepository;
-    }
-
 
     // 스케쥴 생성
     public ScheduleResponseDto createSchedule(ScheduleRequestDto requestDto) {

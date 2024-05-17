@@ -1,5 +1,6 @@
 package org.example.owncalendarserver.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.example.owncalendarserver.dto.ScheduleRequestDto;
 import org.example.owncalendarserver.dto.ScheduleResponseDto;
 import org.example.owncalendarserver.service.ScheduleService;
@@ -9,13 +10,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
+@RequiredArgsConstructor
 public class ScheduleController {
 
     private final ScheduleService scheduleService;
-
-    public ScheduleController(ScheduleService scheduleService) {
-        this.scheduleService = scheduleService;
-    }
 
     // 스케쥴 저장
     @PostMapping("/schedule")

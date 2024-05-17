@@ -8,6 +8,8 @@ import org.example.owncalendarserver.dto.ScheduleRequestDto;
 
 import java.util.Date;
 
+
+
 @Entity // JPA가 관리할 수 있는 Entity 클래스 지정
 @Getter
 @Setter
