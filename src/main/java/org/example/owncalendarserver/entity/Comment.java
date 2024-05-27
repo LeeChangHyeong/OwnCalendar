@@ -16,15 +16,23 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "title", nullable = false)
-    private String title;
-
     @Column(name = "content", nullable = false)
     private String content;
 
-    @Column(name = "name", nullable = false)
-    private String name;
+    @Column(name = "user_id", nullable = false)
+    private String user_id;
 
     @Column(name = "createDate", nullable = false)
     private Date createDate;
+
+    @ManyToOne
+    @JoinColumn(name = "schedule_id", nullable = false)
+    private Schedule schedule;
+
+    public Comment(CommentRequestDto requestDto, Schedule schedule) {
+        this.content = requestDto.getContent();
+        this.user_id = requestDto.getUser_id();
+        this.createDate = new Date();
+        this.schedule = schedule;
+    }
 }
