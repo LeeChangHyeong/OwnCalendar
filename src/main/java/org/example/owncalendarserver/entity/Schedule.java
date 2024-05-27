@@ -6,8 +6,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.example.owncalendarserver.dto.ScheduleRequestDto;
 
+import java.util.ArrayList;
 import java.util.Date;
-
+import java.util.List;
 
 
 @Entity // JPA가 관리할 수 있는 Entity 클래스 지정
@@ -30,6 +31,8 @@ public class Schedule {
     private String password;
     @Column(name = "createDate", nullable = false)
     private Date createDate;
+    @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments;
 
     public Schedule(ScheduleRequestDto requestDto) {
         this.title = requestDto.getTitle();
@@ -37,6 +40,7 @@ public class Schedule {
         this.name = requestDto.getName();
         this.password = requestDto.getPassword();
         this.createDate = new Date();
+        this.comments = new ArrayList<>();
     }
 
     public void update(ScheduleRequestDto scheduleRequestDto) {

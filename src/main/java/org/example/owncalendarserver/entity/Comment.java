@@ -3,6 +3,7 @@ package org.example.owncalendarserver.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.example.owncalendarserver.dto.CommentRequestDto;
 
 import java.util.Date;
 
