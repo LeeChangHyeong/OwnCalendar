@@ -8,12 +8,12 @@ import java.util.Date;
 public class CommentResponseDto {
     private String content;
     private String user_id;
-    private Date creatDate;
+    private Date createDate;
 
 
     public CommentResponseDto(Comment comment) {
         this.content = comment.getContent();
         this.user_id = comment.getUser_id();
-        this.creatDate = comment.getCreateDate();
+        this.createDate = comment.getCreateDate();
     }
 }
