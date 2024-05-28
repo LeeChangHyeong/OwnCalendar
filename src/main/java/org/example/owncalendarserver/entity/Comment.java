@@ -35,4 +35,8 @@ public class Comment {
         this.createDate = new Date();
         this.schedule = schedule;
     }
+
+    public void update(CommentRequestDto requestDto) {
+        this.content = requestDto.getContent();
+    }
 }

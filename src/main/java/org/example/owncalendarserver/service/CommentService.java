@@ -8,6 +8,7 @@ import org.example.owncalendarserver.entity.Schedule;
 import org.example.owncalendarserver.repository.CommentRepository;
 import org.example.owncalendarserver.repository.ScheduleRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
