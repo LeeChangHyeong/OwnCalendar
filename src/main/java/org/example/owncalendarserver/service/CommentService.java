@@ -33,11 +33,9 @@ public class CommentService {
 
     @Transactional
     public CommentResponseDto editComment(CommentRequestDto requestDto, Long commentId) {
-        Comment comment = commentRepository.findById(commentId).orElseThrow(() ->
-                new IllegalArgumentException("선택한 댓글은 존재하지 않습니다.")
-        );
+        Comment comment = checkCommentWithId(commentId);
 
-        checkId(comment, requestDto);
+        checkUserId(comment, requestDto);
 
         comment.update(requestDto);
 
@@ -46,9 +44,26 @@ public class CommentService {
         return  commentResponseDto;
     }
 
-    public void checkId(Comment comment, CommentRequestDto requestDto) {
+    public void deleteComment(CommentRequestDto requestDto, Long commentId) {
+        Comment comment = checkCommentWithId(commentId);
+
+        checkUserId(comment, requestDto);
+
+        commentRepository.delete(comment);
+    }
+
+    // 있는 schedule인지 체크
+    public Comment checkCommentWithId(Long commentId) {
+        return commentRepository.findById(commentId).orElseThrow(() ->
+                new IllegalArgumentException("선택한 댓글은 존재하지 않습니다.")
+        );
+    }
+
+    // 있는 comment인지 체크
+    public void checkUserId(Comment comment, CommentRequestDto requestDto) {
       if(!comment.getUser_id().equals(requestDto.getUser_id())) {
           throw new IllegalStateException("사용자가 일치하지 않습니다.");
       }
     }
+
 }
