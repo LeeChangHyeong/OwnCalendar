@@ -1,5 +1,6 @@
 package org.example.owncalendarserver.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.owncalendarserver.dto.CommentRequestDto;
 import org.example.owncalendarserver.dto.CommentResponseDto;
@@ -18,17 +19,17 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping("/comment/{schedule_id}")
-    public CommentResponseDto createComment(@PathVariable Long schedule_id, @RequestBody CommentRequestDto requestDto) {
+    public CommentResponseDto createComment(@PathVariable Long schedule_id, @RequestBody @Valid CommentRequestDto requestDto) {
         return commentService.createComment(requestDto, schedule_id);
     }
 
     @PutMapping("/comment/{comment_id}")
-    public CommentResponseDto editComment(@PathVariable Long comment_id, @RequestBody CommentRequestDto requestDto) {
+    public CommentResponseDto editComment(@PathVariable Long comment_id, @RequestBody @Valid CommentRequestDto requestDto) {
             return commentService.editComment(requestDto, comment_id);
     }
 
     @DeleteMapping("/comment/{comment_id}")
-    public ResponseEntity<Map<String, Object>> deleteComment(@PathVariable Long comment_id, @RequestBody CommentRequestDto requestDto) {
+    public ResponseEntity<Map<String, Object>> deleteComment(@PathVariable Long comment_id, @RequestBody @Valid CommentRequestDto requestDto) {
         commentService.deleteComment(requestDto, comment_id);
 
         Map<String, Object> response = new HashMap<>();

@@ -1,5 +1,6 @@
 package org.example.owncalendarserver.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.owncalendarserver.dto.ScheduleRequestDto;
 import org.example.owncalendarserver.dto.ScheduleResponseDto;
@@ -17,7 +18,7 @@ public class ScheduleController {
 
     // 스케쥴 저장
     @PostMapping("/schedule")
-    public ScheduleResponseDto createSchedule(@RequestBody ScheduleRequestDto requestDto) {
+    public ScheduleResponseDto createSchedule(@RequestBody @Valid ScheduleRequestDto requestDto) {
         return scheduleService.createSchedule(requestDto);
     }
 
@@ -35,7 +36,7 @@ public class ScheduleController {
 
     // 특정 스케쥴 수정
     @PutMapping("/schedule/{id}")
-    public ScheduleResponseDto editSchedule(@PathVariable Long id, @RequestBody ScheduleRequestDto requestDto) {
+    public ScheduleResponseDto editSchedule(@PathVariable Long id, @RequestBody @Valid ScheduleRequestDto requestDto) {
         return scheduleService.editSchedule(id, requestDto, requestDto.getPassword());
     }
 
