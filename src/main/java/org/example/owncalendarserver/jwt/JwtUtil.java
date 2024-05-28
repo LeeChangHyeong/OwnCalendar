@@ -1,15 +1,19 @@
 package org.example.owncalendarserver.jwt;
 
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.security.Key;
 import java.util.Base64;
+import java.util.Date;
 
-
+@Slf4j(topic = "JwtUtil") // 로그 찍기위해서
 @Component
 public class JwtUtil {
     // Header KEY 값
