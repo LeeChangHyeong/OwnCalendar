@@ -1,9 +1,10 @@
 package org.example.owncalendarserver.dto;
 
+import lombok.Getter;
 import org.example.owncalendarserver.entity.Comment;
 
 import java.util.Date;
-
+@Getter
 public class CommentResponseDto {
     private String content;
     private String user_id;
