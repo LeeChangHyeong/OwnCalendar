@@ -1,10 +1,15 @@
 package org.example.owncalendarserver.service;
 
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.example.owncalendarserver.dto.LoginRequestDto;
 import org.example.owncalendarserver.dto.SignupRequestDto;
 import org.example.owncalendarserver.entity.User;
 import org.example.owncalendarserver.entity.UserRoleEnum;
+import org.example.owncalendarserver.jwt.JwtUtil;
 import org.example.owncalendarserver.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +20,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final JwtUtil jwtUtil;
 
     // ADMIN_TOKEN
     private final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
@@ -32,7 +38,7 @@ public class UserService {
 
         // 회원 중복 확인
         Optional<User> checkUserName = userRepository.findByUserName(userName);
-        if(checkUserName.isPresent()) {
+        if (checkUserName.isPresent()) {
             throw new IllegalStateException("중복된 사용자가 있습니다.");
         }
 
@@ -48,19 +54,21 @@ public class UserService {
         // 사용자 등록
         User user = new User(nickName, userName, password, role);
         userRepository.save(user);
-
     }
 
-    public void login(LoginRequestDto requestDto) {
+    public void login(LoginRequestDto requestDto, HttpServletResponse response) {
         String userName = requestDto.getUserName();
         String password = requestDto.getPassword();
 
         User user = userRepository.findByUserName(userName)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자 이름입니다.."));
 
-        if(password.equals(user.getPassword())) {
+        UserRoleEnum role = user.getRole();
+
+        if (password.equals(user.getPassword())) {
             // 로그인 성공 로직
-            // 토큰 생성해서 저장해줘야 함?
+            String token = jwtUtil.createToken(userName, role);
+            response.addHeader(JwtUtil.AUTHORIZATION_HEADER, token);
         } else {
             throw new IllegalStateException("비밀번호를 확인해주세요.");
         }
