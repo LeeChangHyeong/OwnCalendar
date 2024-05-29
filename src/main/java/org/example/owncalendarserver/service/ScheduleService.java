@@ -21,14 +21,14 @@ public class ScheduleService {
 
     // 스케쥴 생성
     public ScheduleResponseDto createSchedule(ScheduleRequestDto requestDto, HttpServletRequest request) {
+
+        // 토큰으로 유저 정보 받아오기
+        Claims user = getIdfromToken(request);
+
         // RequestDto -> Entity
-        Schedule schedule = new Schedule(requestDto);
+        Schedule schedule = new Schedule(requestDto, user.getSubject());
 
-        String token = jwtUtil.getJwtFromHeader(request);
-
-        if (!jwtUtil.validateToken(token)) {
-            new IllegalArgumentException("토큰값을 확인해주세요.");
-        }
+        checkUser(user.getSubject(), request);
 
         // DB 저장
         Schedule saveSchedule = scheduleRepository.save(schedule);
@@ -64,8 +64,11 @@ public class ScheduleService {
         // 비밀번호 확인
         checkPassword(schedule, password);
 
+        // 토큰으로 유저 정보 받아오기
+        Claims user = getIdfromToken(request);
+
         // 작성한 유저 확인
-        checkUser(id, request);
+        checkUser(user.getSubject(), request);
 
         // 메모 내용 수정
         schedule.update(requestDto);
@@ -82,8 +85,12 @@ public class ScheduleService {
         // 비밀번호 확인
         checkPassword(schedule, password);
 
+
+        // 토큰으로 유저 정보 받아오기
+        Claims user = getIdfromToken(request);
+
         // 작성한 유저 확인
-        checkUser(id, request);
+        checkUser(user.getSubject(), request);
 
         // 스케쥴 삭제
         scheduleRepository.delete(schedule);
@@ -91,12 +98,12 @@ public class ScheduleService {
         return id;
     }
 
-    private void checkUser(Long id, HttpServletRequest request) {
+    private void checkUser(String id, HttpServletRequest request) {
         // 토큰 확인
         String token = jwtUtil.getJwtFromHeader(request);
 
         if (!jwtUtil.validateToken(token)) {
-            new IllegalArgumentException("토큰값을 확인해주세요.");
+            throw new IllegalArgumentException("토큰값을 확인해주세요.");
         }
 
         // 토큰으로 유저 정보 받아오기
@@ -104,7 +111,7 @@ public class ScheduleService {
         System.out.println(user.getSubject());
 
         if (!user.getSubject().equals(id)) {
-            new IllegalArgumentException("스케쥴 작성자가 아니라 삭제가 불가능합니다.");
+            throw new IllegalArgumentException("스케쥴 작성자가 아니라 삭제가 불가능합니다.");
         }
     }
 
@@ -119,5 +126,15 @@ public class ScheduleService {
         return scheduleRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("선택한 메모는 존재하지 않습니다.")
         );
+    }
+    // 토큰으로 아이디 들고옴
+    private Claims getIdfromToken(HttpServletRequest request) {
+        String token = jwtUtil.getJwtFromHeader(request);
+
+        if (!jwtUtil.validateToken(token)) {
+            throw new IllegalArgumentException("토큰값을 확인해주세요.");
+        }
+
+        return jwtUtil.getUserInfoFromToken(token);
     }
 }
