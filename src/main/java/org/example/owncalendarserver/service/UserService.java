@@ -1,6 +1,7 @@
 package org.example.owncalendarserver.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.owncalendarserver.dto.LoginRequestDto;
 import org.example.owncalendarserver.dto.SignupRequestDto;
 import org.example.owncalendarserver.entity.User;
 import org.example.owncalendarserver.entity.UserRoleEnum;
@@ -48,5 +49,20 @@ public class UserService {
         User user = new User(nickName, userName, password, role);
         userRepository.save(user);
 
+    }
+
+    public void login(LoginRequestDto requestDto) {
+        String userName = requestDto.getUserName();
+        String password = requestDto.getPassword();
+
+        User user = userRepository.findByUserName(userName)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자 이름입니다.."));
+
+        if(password.equals(user.getPassword())) {
+            // 로그인 성공 로직
+            // 토큰 생성해서 저장해줘야 함?
+        } else {
+            throw new IllegalStateException("비밀번호를 확인해주세요.");
+        }
     }
 }
