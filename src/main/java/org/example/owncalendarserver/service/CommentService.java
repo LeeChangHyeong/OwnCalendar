@@ -93,18 +93,18 @@ public class CommentService {
         Claims user = getIdfromToken(request);
 
         if (!user.getSubject().equals(id)) {
-            throw new IllegalArgumentException("스케쥴 작성자가 아니라 삭제가 불가능합니다.");
+            throw new IllegalArgumentException("댓글 작성자가 아니라 삭제가 불가능합니다.");
         }
     }
 
-    // 있는 schedule인지 체크
+    // 있는 comment인지 체크
     public Comment checkCommentWithId(Long commentId) {
         return commentRepository.findById(commentId).orElseThrow(() ->
                 new IllegalArgumentException("선택한 댓글은 존재하지 않습니다.")
         );
     }
 
-    // 있는 comment인지 체크
+    // 댓글 쓴 유저id와 현재 로그인 된 사람이 맞는지 확인
     public void checkUserId(Comment comment, String userId) {
         if (!comment.getUser_id().equals(userId)) {
             throw new IllegalStateException("사용자가 일치하지 않습니다.");
