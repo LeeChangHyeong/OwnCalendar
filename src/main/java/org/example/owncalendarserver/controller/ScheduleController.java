@@ -1,5 +1,7 @@
 package org.example.owncalendarserver.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.owncalendarserver.dto.ScheduleRequestDto;
@@ -18,8 +20,8 @@ public class ScheduleController {
 
     // 스케쥴 저장
     @PostMapping("/schedule")
-    public ScheduleResponseDto createSchedule(@RequestBody @Valid ScheduleRequestDto requestDto) {
-        return scheduleService.createSchedule(requestDto);
+    public ScheduleResponseDto createSchedule(@RequestBody @Valid ScheduleRequestDto requestDto, HttpServletRequest request) {
+        return scheduleService.createSchedule(requestDto, request);
     }
 
     // 선택 스케쥴 조회
@@ -36,12 +38,12 @@ public class ScheduleController {
 
     // 특정 스케쥴 수정
     @PutMapping("/schedule/{id}")
-    public ScheduleResponseDto editSchedule(@PathVariable Long id, @RequestBody @Valid ScheduleRequestDto requestDto) {
-        return scheduleService.editSchedule(id, requestDto, requestDto.getPassword());
+    public ScheduleResponseDto editSchedule(@PathVariable Long id, @RequestBody @Valid ScheduleRequestDto requestDto, HttpServletRequest request) {
+        return scheduleService.editSchedule(id, requestDto, requestDto.getPassword(), request);
     }
 
     @DeleteMapping("/schedule/{id}")
-    public Long deleteSchedule(@PathVariable Long id, @RequestBody ScheduleRequestDto requestDto) {
-        return scheduleService.deleteSchedule(id, requestDto.getPassword());
+    public Long deleteSchedule(@PathVariable Long id, @RequestBody ScheduleRequestDto requestDto, HttpServletRequest request) {
+        return scheduleService.deleteSchedule(id, requestDto.getPassword(), request);
     }
 }
