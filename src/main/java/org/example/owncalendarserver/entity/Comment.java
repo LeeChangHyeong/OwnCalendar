@@ -29,9 +29,9 @@ public class Comment {
     @JoinColumn(name = "schedule_id", nullable = false)
     private Schedule schedule;
 
-    public Comment(CommentRequestDto requestDto, Schedule schedule) {
+    public Comment(CommentRequestDto requestDto, Schedule schedule, String user_id) {
         this.content = requestDto.getContent();
-        this.user_id = requestDto.getUser_id();
+        this.user_id = user_id;
         this.createDate = new Date();
         this.schedule = schedule;
     }
