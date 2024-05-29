@@ -1,5 +1,6 @@
 package org.example.owncalendarserver.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.owncalendarserver.dto.CommentRequestDto;
@@ -19,18 +20,18 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping("/comment/{schedule_id}")
-    public CommentResponseDto createComment(@PathVariable Long schedule_id, @RequestBody @Valid CommentRequestDto requestDto) {
-        return commentService.createComment(requestDto, schedule_id);
+    public CommentResponseDto createComment(@PathVariable Long schedule_id, @RequestBody @Valid CommentRequestDto requestDto, HttpServletRequest request) {
+        return commentService.createComment(requestDto, schedule_id, request);
     }
 
     @PutMapping("/comment/{comment_id}")
-    public CommentResponseDto editComment(@PathVariable Long comment_id, @RequestBody @Valid CommentRequestDto requestDto) {
-            return commentService.editComment(requestDto, comment_id);
+    public CommentResponseDto editComment(@PathVariable Long comment_id, @RequestBody @Valid CommentRequestDto requestDto, HttpServletRequest request) {
+            return commentService.editComment(requestDto, comment_id, request);
     }
 
     @DeleteMapping("/comment/{comment_id}")
-    public ResponseEntity<Map<String, Object>> deleteComment(@PathVariable Long comment_id, @RequestBody @Valid CommentRequestDto requestDto) {
-        commentService.deleteComment(requestDto, comment_id);
+    public ResponseEntity<Map<String, Object>> deleteComment(@PathVariable Long comment_id, HttpServletRequest request) {
+        commentService.deleteComment(comment_id, request);
 
         Map<String, Object> response = new HashMap<>();
         response.put("message", "삭제가 성공적으로 이루어졌습니다.");
