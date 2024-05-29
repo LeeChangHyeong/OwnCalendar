@@ -34,10 +34,10 @@ public class Schedule {
     @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
 
-    public Schedule(ScheduleRequestDto requestDto) {
+    public Schedule(ScheduleRequestDto requestDto, String userName) {
         this.title = requestDto.getTitle();
         this.content = requestDto.getContent();
-        this.name = requestDto.getName();
+        this.name = userName;
         this.password = requestDto.getPassword();
         this.createDate = new Date();
         this.comments = new ArrayList<>();
@@ -46,6 +46,5 @@ public class Schedule {
     public void update(ScheduleRequestDto scheduleRequestDto) {
         this.title = scheduleRequestDto.getTitle();
         this.content = scheduleRequestDto.getContent();
-        this.name = scheduleRequestDto.getName();
     }
 }
