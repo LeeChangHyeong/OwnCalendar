@@ -7,8 +7,10 @@ import lombok.RequiredArgsConstructor;
 import org.example.owncalendarserver.dto.ScheduleRequestDto;
 import org.example.owncalendarserver.dto.ScheduleResponseDto;
 import org.example.owncalendarserver.entity.Schedule;
+import org.example.owncalendarserver.entity.User;
 import org.example.owncalendarserver.jwt.JwtUtil;
 import org.example.owncalendarserver.repository.ScheduleRepository;
+import org.example.owncalendarserver.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor // final 키워드를 가진 모든 것에 대한 생성자를 만들어준다.
 public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
+    private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
 
     // 스케쥴 생성
@@ -25,8 +28,12 @@ public class ScheduleService {
         // 토큰으로 유저 정보 받아오기
         Claims user = getIdfromToken(request);
 
+        User realUser = userRepository.findByUserName(user.getSubject()).orElseThrow(() ->
+                new IllegalArgumentException("유저를 찾을 수 없습니다.")
+        );
+
         // RequestDto -> Entity
-        Schedule schedule = new Schedule(requestDto, user.getSubject());
+        Schedule schedule = new Schedule(requestDto, user.getSubject(), realUser);
 
         checkUser(user.getSubject(), request);
 
@@ -56,13 +63,10 @@ public class ScheduleService {
 
     // 특정 스케쥴 수정
     @Transactional
-    public ScheduleResponseDto editSchedule(Long id, ScheduleRequestDto requestDto, String password, HttpServletRequest request) {
+    public ScheduleResponseDto editSchedule(Long id, ScheduleRequestDto requestDto, HttpServletRequest request) {
         // 해당 메모가 DB에 존재하는지 확인
         // 옵셔널 해제
         Schedule schedule = findSchedule(id);
-
-        // 비밀번호 확인
-        checkPassword(schedule, password);
 
         // 토큰으로 유저 정보 받아오기
         Claims user = getIdfromToken(request);
@@ -78,13 +82,9 @@ public class ScheduleService {
         return scheduleResponseDto;
     }
 
-    public Long deleteSchedule(Long id, String password, HttpServletRequest request) {
+    public void deleteSchedule(Long id, HttpServletRequest request) {
         // 해당 스케쥴이 DB에 존재하는지 확인
         Schedule schedule = findSchedule(id);
-
-        // 비밀번호 확인
-        checkPassword(schedule, password);
-
 
         // 토큰으로 유저 정보 받아오기
         Claims user = getIdfromToken(request);
@@ -95,7 +95,7 @@ public class ScheduleService {
         // 스케쥴 삭제
         scheduleRepository.delete(schedule);
 
-        return id;
+        return;
     }
 
     private void checkUser(String id, HttpServletRequest request) {
@@ -112,13 +112,6 @@ public class ScheduleService {
 
         if (!user.getSubject().equals(id)) {
             throw new IllegalArgumentException("스케쥴 작성자가 아니라 삭제가 불가능합니다.");
-        }
-    }
-
-    // 비밀번호 확인
-    public void checkPassword(Schedule schedule, String password) {
-        if (!schedule.getPassword().equals(password)) {
-            throw new IllegalStateException("비밀번호가 틀립니다.");
         }
     }
 

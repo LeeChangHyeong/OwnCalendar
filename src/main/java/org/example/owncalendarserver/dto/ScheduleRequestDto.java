@@ -10,6 +10,4 @@ public class ScheduleRequestDto {
     private String title;
     @NotEmpty(message = "content는 꼭 입력하셔야 합니다.")
     private String content;
-    @NotEmpty(message = "password는 꼭 입력하셔야 합니다.")
-    private String password;
 }

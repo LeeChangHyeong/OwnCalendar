@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Getter
@@ -31,11 +33,15 @@ public class User {
     @Column(nullable = false)
     private Date createTime;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Schedule> schedules;
+
     public User (String nickName, String userName, String password, UserRoleEnum role) {
         this.nickName = nickName;
         this.userName = userName;
         this.password = password;
         this.role = role;
         this.createTime = new Date();
+        this.schedules = new ArrayList<>();
     }
 }

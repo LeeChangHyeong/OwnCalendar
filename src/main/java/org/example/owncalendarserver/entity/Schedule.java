@@ -1,5 +1,6 @@
 package org.example.owncalendarserver.entity;
 
+import io.jsonwebtoken.Claims;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,26 +22,34 @@ public class Schedule {
     // 기본키 생성을 DB에 위임
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(name = "title", nullable = false)
     private String title;
+
     @Column(name = "content", nullable = false)
     private String content;
+
     @Column(name = "name", nullable = false)
     private String name;
-    @Column(name = "password", nullable = false)
-    private String password;
+
     @Column(name = "createDate", nullable = false)
     private Date createDate;
+
     @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
 
-    public Schedule(ScheduleRequestDto requestDto, String userName) {
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+
+    public Schedule(ScheduleRequestDto requestDto, String userName, User user) {
         this.title = requestDto.getTitle();
         this.content = requestDto.getContent();
         this.name = userName;
-        this.password = requestDto.getPassword();
         this.createDate = new Date();
         this.comments = new ArrayList<>();
+        this.user = user;
     }
 
     public void update(ScheduleRequestDto scheduleRequestDto) {

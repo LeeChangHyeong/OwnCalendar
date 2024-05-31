@@ -7,9 +7,13 @@ import lombok.RequiredArgsConstructor;
 import org.example.owncalendarserver.dto.ScheduleRequestDto;
 import org.example.owncalendarserver.dto.ScheduleResponseDto;
 import org.example.owncalendarserver.service.ScheduleService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -39,11 +43,16 @@ public class ScheduleController {
     // 특정 스케쥴 수정
     @PutMapping("/schedule/{id}")
     public ScheduleResponseDto editSchedule(@PathVariable Long id, @RequestBody @Valid ScheduleRequestDto requestDto, HttpServletRequest request) {
-        return scheduleService.editSchedule(id, requestDto, requestDto.getPassword(), request);
+        return scheduleService.editSchedule(id, requestDto, request);
     }
 
     @DeleteMapping("/schedule/{id}")
-    public Long deleteSchedule(@PathVariable Long id, @RequestBody ScheduleRequestDto requestDto, HttpServletRequest request) {
-        return scheduleService.deleteSchedule(id, requestDto.getPassword(), request);
+    public ResponseEntity<Map<String, Object>> deleteSchedule(@PathVariable Long id, HttpServletRequest request) {
+        scheduleService.deleteSchedule(id, request);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "삭제가 성공적으로 이루어졌습니다.");
+        response.put("status", HttpStatus.OK.value());
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
